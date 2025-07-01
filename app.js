@@ -1,14 +1,13 @@
 // Format angka ke Rupiah + pembulatan ke satuan terdekat
 const formatRupiah = (value) => {
-  const rounded = Math.round(value);
+  const MathRound = Math.round(value);
   return new Intl.NumberFormat("id-ID", {
     style: "currency",
     currency: "IDR",
     minimumFractionDigits: 0,
-  }).format(rounded);
+  }).format(MathRound);
 };
 
-// Bersihkan input jadi angka murni
 const cleanInput = (value) => {
   return parseFloat(value) || 0;
 };
@@ -93,30 +92,4 @@ document.getElementById("loanForm").addEventListener("submit", function (e) {
     <strong>Lama Pelunasan:</strong> ${i - 1} bulan</p>`;
 
   document.getElementById("result").innerHTML = resultHTML;
-});
-
-// Ekspor ke PDF multi-halaman dengan AutoTable
-document.getElementById("exportPdf").addEventListener("click", function () {
-  const resultDiv = document.getElementById("result");
-  if (!resultDiv.innerHTML.trim()) return alert("Tidak ada hasil untuk diekspor!");
-
-  const { jsPDF } = window.jspdf;
-  const pdf = new jsPDF("p", "mm", "a4");
-
-  pdf.text("Hasil Simulasi Pinjaman", 14, 14);
-
-  const table = document.querySelector("#hasilTable");
-  const rows = [...table.querySelectorAll("tbody tr")].map(tr => {
-    return [...tr.querySelectorAll("td")].map(td => td.textContent);
-  });
-
-  pdf.autoTable({
-    head: [["Bulan", "Pokok Pinjaman", "Cicilan Pokok", "Bunga", "Angsuran", "Saldo Pokok"]],
-    body: rows,
-    startY: 20,
-    styles: { fontSize: 9 },
-    theme: "grid"
-  });
-
-  pdf.save("simulasi-pinjaman.pdf");
 });
