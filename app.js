@@ -30,10 +30,11 @@ document.getElementById("loanForm").addEventListener("submit", function (e) {
     <table>
       <tr>
         <th>Bulan</th>
-        <th>Pokok</th>
+        <th>Pokok Pinjaman</th>
+        <th>Cicilan Pokok</th>
         <th>Bunga</th>
-        <th>Angsuran</th>
-        <th>Saldo</th>
+        <th>Angsuran Perbulan</th>
+        <th>Saldo Pokok</th>
       </tr>`;
 
   let remaining = amount;
@@ -74,6 +75,7 @@ document.getElementById("loanForm").addEventListener("submit", function (e) {
 
     resultHTML += `<tr>
       <td>${i}</td>
+      <td>${formatRupiah(amount)}</td>
       <td>${formatRupiah(pokok)}</td>
       <td>${formatRupiah(bunga)}</td>
       <td>${formatRupiah(angsuran)}</td>
