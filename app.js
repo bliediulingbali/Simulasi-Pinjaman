@@ -1,13 +1,5 @@
-document.getElementById("loanForm").addEventListener("submit", function (e) {
-  e.preventDefault();
-
-  const amount = parseFloat(document.getElementById("amount").value);
-  const interest = parseFloat(document.getElementById("interest").value) / 100;
-  const tenor = parseInt(document.getElementById("tenor").value);
-  const type = document.getElementById("type").value.toUpperCase();
-  const extra = parseFloat(document.getElementById("extra").value || 0);
-
-  const formatRupiah = (value) => {
+// Format angka ke Rupiah
+const formatRupiah = (value) => {
   return new Intl.NumberFormat("id-ID", {
     style: "currency",
     currency: "IDR",
@@ -15,7 +7,37 @@ document.getElementById("loanForm").addEventListener("submit", function (e) {
   }).format(value);
 };
 
-  if (amount <= 0 || interest < 0 || tenor <= 0) {
+// Hapus semua karakter non-digit
+const cleanInput = (value) => {
+  return parseFloat(value.replace(/[^\d]/g, ""));
+};
+
+// Format input langsung saat diketik
+const formatInputLive = (input) => {
+  const num = cleanInput(input.value);
+  if (isNaN(num)) {
+    input.value = "";
+    return;
+  }
+  input.value = new Intl.NumberFormat("id-ID").format(num);
+};
+
+// Terapkan formatter input
+["amount", "interest", "tenor", "extra"].forEach((id) => {
+  const input = document.getElementById(id);
+  input.addEventListener("input", () => formatInputLive(input));
+});
+
+document.getElementById("loanForm").addEventListener("submit", function (e) {
+  e.preventDefault();
+
+  const amount = cleanInput(document.getElementById("amount").value);
+  const interest = cleanInput(document.getElementById("interest").value) / 100;
+  const tenor = cleanInput(document.getElementById("tenor").value);
+  const type = document.getElementById("type").value.toUpperCase();
+  const extra = cleanInput(document.getElementById("extra").value || "0");
+
+  if (!amount || !interest || !tenor || amount <= 0 || tenor <= 0) {
     alert("Mohon isi semua data dengan benar!");
     return;
   }
@@ -31,11 +53,14 @@ document.getElementById("loanForm").addEventListener("submit", function (e) {
       </tr>`;
 
   let remaining = amount;
-  let totalInterest = 0, totalInstallment = 0;
+  let totalInterest = 0,
+    totalInstallment = 0;
   let i = 1;
 
   while (remaining > 0 && i <= tenor) {
-    let bunga = 0, pokok = 0, angsuran = 0;
+    let bunga = 0,
+      pokok = 0,
+      angsuran = 0;
 
     switch (type) {
       case "FLAT":
@@ -48,7 +73,8 @@ document.getElementById("loanForm").addEventListener("submit", function (e) {
         break;
       case "EFEKTIF":
         const r = interest / 12;
-        const fixed = amount * r * Math.pow(1 + r, tenor) / (Math.pow(1 + r, tenor) - 1);
+        const fixed =
+          amount * r * Math.pow(1 + r, tenor) / (Math.pow(1 + r, tenor) - 1);
         bunga = remaining * r;
         pokok = fixed - bunga;
         break;
@@ -74,9 +100,9 @@ document.getElementById("loanForm").addEventListener("submit", function (e) {
   }
 
   resultHTML += `</table>
-  <p><strong>Total Bunga:</strong> ${formatRupiah(totalInterest)}<br />
-  <strong>Total Angsuran:</strong> ${formatRupiah(totalInstallment)}<br />
-  <strong>Lama Pelunasan:</strong> ${i - 1} bulan</p>`;
+    <p><strong>Total Bunga:</strong> ${formatRupiah(totalInterest)}<br />
+    <strong>Total Angsuran:</strong> ${formatRupiah(totalInstallment)}<br />
+    <strong>Lama Pelunasan:</strong> ${i - 1} bulan</p>`;
 
   document.getElementById("result").innerHTML = resultHTML;
 });
