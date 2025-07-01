@@ -7,6 +7,14 @@ document.getElementById("loanForm").addEventListener("submit", function (e) {
   const type = document.getElementById("type").value.toUpperCase();
   const extra = parseFloat(document.getElementById("extra").value || 0);
 
+  const formatRupiah = (value) => {
+  return new Intl.NumberFormat("id-ID", {
+    style: "currency",
+    currency: "IDR",
+    minimumFractionDigits: 0,
+  }).format(value);
+};
+
   if (amount <= 0 || interest < 0 || tenor <= 0) {
     alert("Mohon isi semua data dengan benar!");
     return;
@@ -55,10 +63,10 @@ document.getElementById("loanForm").addEventListener("submit", function (e) {
 
     resultHTML += `<tr>
       <td>${i}</td>
-      <td>Rp ${pokok.toFixed(0)}</td>
-      <td>Rp ${bunga.toFixed(0)}</td>
-      <td>Rp ${angsuran.toFixed(0)}</td>
-      <td>Rp ${(remaining - pokok).toFixed(0)}</td>
+      <td>${formatRupiah(pokok)}</td>
+      <td>${formatRupiah(bunga)}</td>
+      <td>${formatRupiah(angsuran)}</td>
+      <td>${formatRupiah(remaining - pokok)}</td>
     </tr>`;
 
     remaining -= pokok;
@@ -66,9 +74,9 @@ document.getElementById("loanForm").addEventListener("submit", function (e) {
   }
 
   resultHTML += `</table>
-    <p><strong>Total Bunga:</strong> Rp ${totalInterest.toFixed(0)}<br />
-    <strong>Total Angsuran:</strong> Rp ${totalInstallment.toFixed(0)}<br />
-    <strong>Lama Pelunasan:</strong> ${i - 1} bulan</p>`;
+  <p><strong>Total Bunga:</strong> ${formatRupiah(totalInterest)}<br />
+  <strong>Total Angsuran:</strong> ${formatRupiah(totalInstallment)}<br />
+  <strong>Lama Pelunasan:</strong> ${i - 1} bulan</p>`;
 
   document.getElementById("result").innerHTML = resultHTML;
 });
