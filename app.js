@@ -38,14 +38,15 @@ document.getElementById("loanForm").addEventListener("submit", function (e) {
       </tr>`;
 
   let remaining = amount;
+  let currentPrincipal = amount;
   let totalInterest = 0,
-    totalInstallment = 0;
+      totalInstallment = 0;
   let i = 1;
 
   while (remaining > 0 && i <= tenor) {
     let bunga = 0,
-      pokok = 0,
-      angsuran = 0;
+        pokok = 0,
+        angsuran = 0;
 
     switch (type) {
       case "FLAT":
@@ -75,7 +76,7 @@ document.getElementById("loanForm").addEventListener("submit", function (e) {
 
     resultHTML += `<tr>
       <td>${i}</td>
-      <td>${formatRupiah(amount)}</td>
+      <td>${formatRupiah(currentPrincipal)}</td>
       <td>${formatRupiah(pokok)}</td>
       <td>${formatRupiah(bunga)}</td>
       <td>${formatRupiah(angsuran)}</td>
@@ -83,6 +84,7 @@ document.getElementById("loanForm").addEventListener("submit", function (e) {
     </tr>`;
 
     remaining -= pokok;
+    currentPrincipal -= pokok;
     i++;
   }
 
