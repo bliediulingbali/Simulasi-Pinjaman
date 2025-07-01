@@ -7,22 +7,31 @@ const formatRupiah = (value) => {
   }).format(value);
 };
 
-// Hapus semua karakter non-digit
+// Hapus karakter non-digit dari input
 const cleanInput = (value) => {
-  return parseFloat(value.replace(/[^\d]/g, ""));
+  return parseFloat(value.replace(/[^\d]/g, "")) || 0;
 };
 
-// Format input langsung saat diketik
+// Format input saat diketik, aman dari bug hapus
 const formatInputLive = (input) => {
-  const num = cleanInput(input.value);
-  if (isNaN(num)) {
+  let value = input.value.replace(/[^\d]/g, "");
+  if (!value) {
     input.value = "";
     return;
   }
-  input.value = new Intl.NumberFormat("id-ID").format(num);
+
+  const formatted = new Intl.NumberFormat("id-ID").format(value);
+  const selectionStart = input.selectionStart;
+  const oldLength = input.value.length;
+
+  input.value = formatted;
+
+  const newLength = formatted.length;
+  const cursorPos = selectionStart + (newLength - oldLength);
+  input.setSelectionRange(cursorPos, cursorPos);
 };
 
-// Terapkan formatter input
+// Terapkan formatting saat input diketik
 ["amount", "interest", "tenor", "extra"].forEach((id) => {
   const input = document.getElementById(id);
   input.addEventListener("input", () => formatInputLive(input));
@@ -74,7 +83,8 @@ document.getElementById("loanForm").addEventListener("submit", function (e) {
       case "EFEKTIF":
         const r = interest / 12;
         const fixed =
-          amount * r * Math.pow(1 + r, tenor) / (Math.pow(1 + r, tenor) - 1);
+          amount * r * Math.pow(1 + r, tenor) /
+          (Math.pow(1 + r, tenor) - 1);
         bunga = remaining * r;
         pokok = fixed - bunga;
         break;
