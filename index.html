@@ -4,19 +4,23 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Simulasi Pinjaman</title>
-  <link rel="manifest" href="manifest.json" />
   <link rel="stylesheet" href="style.css" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
 </head>
 <body>
-  <main class="container">
-    <h1>📱 Simulasi Pinjaman</h1>
-
+  <div class="container">
+    <h1>Simulasi Pinjaman</h1>
     <form id="loanForm">
-      <label>Total Pinjaman (Rp): <input type="number" id="amount" required /></label>
-      <label>Suku Bunga per Tahun (%): <input type="number" id="interest" required /></label>
-      <label>Jangka Waktu (bulan): <input type="number" id="tenor" required /></label>
+      <label>Total Pinjaman:
+        <input type="number" id="amount" placeholder="Contoh: 12000000" required />
+      </label>
+      <label>Suku Bunga (% per tahun):
+        <input type="number" id="interest" placeholder="Contoh: 21" required />
+      </label>
+      <label>Jangka Waktu (bulan):
+        <input type="number" id="tenor" placeholder="Contoh: 12" required />
+      </label>
       <label>Model Bunga:
         <select id="type" required>
           <option value="FLAT">Flat</option>
@@ -24,19 +28,14 @@
           <option value="SLIDING">Menurun (Sliding)</option>
         </select>
       </label>
-      <label>Pelunasan Dipercepat per Bulan (opsional): <input type="number" id="extra" /></label>
-      <button type="submit">Simulasikan</button>
+      <label>Pelunasan Dipercepat per Bulan (Opsional):
+        <input type="number" id="extra" placeholder="Contoh: 100000" />
+      </label>
+      <button type="submit">Hitung Simulasi</button>
     </form>
-
-    <button type="button" id="exportPdf">📌 Ekspor ke PDF</button>
-    <section id="result"></section>
-  </main>
-
+    <button id="exportPdf">Export ke PDF</button>
+    <div id="result"></div>
+  </div>
   <script src="app.js"></script>
-  <script>
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('service-worker.js');
-    }
-  </script>
 </body>
 </html>
