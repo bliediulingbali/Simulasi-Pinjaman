@@ -7,35 +7,10 @@ const formatRupiah = (value) => {
   }).format(value);
 };
 
-// Hapus karakter non-digit dari input
+// Bersihkan input jadi angka murni
 const cleanInput = (value) => {
-  return parseFloat(value.replace(/[^\d]/g, "")) || 0;
+  return parseFloat(value) || 0;
 };
-
-// Format input saat diketik, aman dari bug hapus
-const formatInputLive = (input) => {
-  let value = input.value.replace(/[^\d]/g, "");
-  if (!value) {
-    input.value = "";
-    return;
-  }
-
-  const formatted = new Intl.NumberFormat("id-ID").format(value);
-  const selectionStart = input.selectionStart;
-  const oldLength = input.value.length;
-
-  input.value = formatted;
-
-  const newLength = formatted.length;
-  const cursorPos = selectionStart + (newLength - oldLength);
-  input.setSelectionRange(cursorPos, cursorPos);
-};
-
-// Terapkan formatting saat input diketik
-["amount", "interest", "tenor", "extra"].forEach((id) => {
-  const input = document.getElementById(id);
-  input.addEventListener("input", () => formatInputLive(input));
-});
 
 document.getElementById("loanForm").addEventListener("submit", function (e) {
   e.preventDefault();
