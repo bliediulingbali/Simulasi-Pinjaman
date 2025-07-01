@@ -28,7 +28,8 @@ document.getElementById("loanForm").addEventListener("submit", function (e) {
   }
 
   let resultHTML = `<h3>Hasil Simulasi (${type})</h3>
-    <table>
+    <table id="hasilTable">
+      <thead>
       <tr>
         <th>Bulan</th>
         <th>Pokok Pinjaman</th>
@@ -36,18 +37,17 @@ document.getElementById("loanForm").addEventListener("submit", function (e) {
         <th>Bunga</th>
         <th>Angsuran Perbulan</th>
         <th>Saldo Pokok</th>
-      </tr>`;
+      </tr>
+      </thead>
+      <tbody>`;
 
   let remaining = amount;
   let currentPrincipal = amount;
-  let totalInterest = 0,
-      totalInstallment = 0;
+  let totalInterest = 0, totalInstallment = 0;
   let i = 1;
 
   while (remaining > 0 && i <= tenor) {
-    let bunga = 0,
-        pokok = 0,
-        angsuran = 0;
+    let bunga = 0, pokok = 0, angsuran = 0;
 
     switch (type) {
       case "FLAT":
@@ -60,9 +60,7 @@ document.getElementById("loanForm").addEventListener("submit", function (e) {
         break;
       case "EFEKTIF":
         const r = interest / 12;
-        const fixed =
-          amount * r * Math.pow(1 + r, tenor) /
-          (Math.pow(1 + r, tenor) - 1);
+        const fixed = amount * r * Math.pow(1 + r, tenor) / (Math.pow(1 + r, tenor) - 1);
         bunga = remaining * r;
         pokok = fixed - bunga;
         break;
@@ -89,7 +87,7 @@ document.getElementById("loanForm").addEventListener("submit", function (e) {
     i++;
   }
 
-  resultHTML += `</table>
+  resultHTML += `</tbody></table>
     <p><strong>Total Bunga:</strong> ${formatRupiah(totalInterest)}<br />
     <strong>Total Angsuran:</strong> ${formatRupiah(totalInstallment)}<br />
     <strong>Lama Pelunasan:</strong> ${i - 1} bulan</p>`;
@@ -97,29 +95,28 @@ document.getElementById("loanForm").addEventListener("submit", function (e) {
   document.getElementById("result").innerHTML = resultHTML;
 });
 
-// Ekspor ke PDF
+// Ekspor ke PDF multi-halaman dengan AutoTable
 document.getElementById("exportPdf").addEventListener("click", function () {
   const resultDiv = document.getElementById("result");
   if (!resultDiv.innerHTML.trim()) return alert("Tidak ada hasil untuk diekspor!");
 
-  html2canvas(resultDiv).then(canvas => {
-    const imgData = canvas.toDataURL("image/png");
-    const { jsPDF } = window.jspdf;
-    const pdf = new jsPDF("p", "mm", "a4");
-    const imgWidth = 210;
-    const pageHeight = 295;
-    const imgHeight = canvas.height * imgWidth / canvas.width;
-    let position = 10;
-    let heightLeft = imgHeight;
+  const { jsPDF } = window.jspdf;
+  const pdf = new jsPDF("p", "mm", "a4");
 
-    pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
-    while (heightLeft > pageHeight) {
-      position = heightLeft - imgHeight;
-      pdf.addPage();
-      pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
-      heightLeft -= pageHeight;
-    }
+  pdf.text("Hasil Simulasi Pinjaman", 14, 14);
 
-    pdf.save("simulasi-pinjaman.pdf");
+  const table = document.querySelector("#hasilTable");
+  const rows = [...table.querySelectorAll("tbody tr")].map(tr => {
+    return [...tr.querySelectorAll("td")].map(td => td.textContent);
   });
+
+  pdf.autoTable({
+    head: [["Bulan", "Pokok Pinjaman", "Cicilan Pokok", "Bunga", "Angsuran", "Saldo Pokok"]],
+    body: rows,
+    startY: 20,
+    styles: { fontSize: 9 },
+    theme: "grid"
+  });
+
+  pdf.save("simulasi-pinjaman.pdf");
 });
