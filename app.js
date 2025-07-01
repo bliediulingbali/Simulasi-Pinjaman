@@ -1,10 +1,11 @@
-// Format angka ke Rupiah
+// Format angka ke Rupiah + pembulatan ke satuan terdekat
 const formatRupiah = (value) => {
+  const rounded = Math.round(value); // Bulatkan ke satuan
   return new Intl.NumberFormat("id-ID", {
     style: "currency",
     currency: "IDR",
     minimumFractionDigits: 0,
-  }).format(value);
+  }).format(rounded);
 };
 
 // Bersihkan input jadi angka murni
