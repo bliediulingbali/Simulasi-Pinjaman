@@ -3,6 +3,7 @@ body {
   margin: 20px;
   background-color: #f4f4f4;
   color: #333;
+  overflow-x: hidden; /* Hindari scroll horizontal global */
 }
 
 .container {
@@ -11,6 +12,7 @@ body {
   margin: auto;
   background: #fff;
   padding: 20px;
+  box-sizing: border-box;
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0,0,0,0.1);
 }
@@ -20,7 +22,9 @@ form label {
   margin-bottom: 10px;
 }
 
-form input, form select, form button {
+form input,
+form select,
+form button {
   width: 100%;
   padding: 10px;
   margin-top: 4px;
@@ -42,32 +46,37 @@ button:hover {
 }
 
 #result {
+  margin-top: 20px;
   overflow-x: auto;
 }
 
 #result table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 20px;
   min-width: 600px;
 }
 
-#result table, #result th, #result td {
+#result table,
+#result th,
+#result td {
   border: 1px solid #999;
 }
 
-#result th, #result td {
+#result th,
+#result td {
   padding: 8px;
   text-align: center;
   font-size: 14px;
 }
 
-h1, h3 {
+h1,
+h3 {
   text-align: center;
 }
 
 @media (min-width: 768px) {
-  #result th, #result td {
+  #result th,
+  #result td {
     font-size: 15px;
     padding: 10px;
   }
