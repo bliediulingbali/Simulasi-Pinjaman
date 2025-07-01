@@ -1,6 +1,6 @@
 // Format angka ke Rupiah + pembulatan ke satuan terdekat
 const formatRupiah = (value) => {
-  const rounded = Math.round(value); // Bulatkan ke satuan
+  const rounded = Math.round(value);
   return new Intl.NumberFormat("id-ID", {
     style: "currency",
     currency: "IDR",
@@ -95,4 +95,31 @@ document.getElementById("loanForm").addEventListener("submit", function (e) {
     <strong>Lama Pelunasan:</strong> ${i - 1} bulan</p>`;
 
   document.getElementById("result").innerHTML = resultHTML;
+});
+
+// Ekspor ke PDF
+document.getElementById("exportPdf").addEventListener("click", function () {
+  const resultDiv = document.getElementById("result");
+  if (!resultDiv.innerHTML.trim()) return alert("Tidak ada hasil untuk diekspor!");
+
+  html2canvas(resultDiv).then(canvas => {
+    const imgData = canvas.toDataURL("image/png");
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF("p", "mm", "a4");
+    const imgWidth = 210;
+    const pageHeight = 295;
+    const imgHeight = canvas.height * imgWidth / canvas.width;
+    let position = 10;
+    let heightLeft = imgHeight;
+
+    pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
+    while (heightLeft > pageHeight) {
+      position = heightLeft - imgHeight;
+      pdf.addPage();
+      pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
+      heightLeft -= pageHeight;
+    }
+
+    pdf.save("simulasi-pinjaman.pdf");
+  });
 });
