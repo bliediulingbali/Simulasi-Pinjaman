@@ -6,7 +6,8 @@ body {
 }
 
 .container {
-  max-width: 600px;
+  width: 100%;
+  max-width: 800px;
   margin: auto;
   background: #fff;
   padding: 20px;
@@ -40,10 +41,15 @@ button:hover {
   background-color: #45a049;
 }
 
+#result {
+  overflow-x: auto;
+}
+
 #result table {
   width: 100%;
   border-collapse: collapse;
   margin-top: 20px;
+  min-width: 600px;
 }
 
 #result table, #result th, #result td {
@@ -63,4 +69,11 @@ h1, h3 {
 #exportPdf {
   background-color: #2196F3;
   margin-bottom: 20px;
+}
+
+@media (min-width: 768px) {
+  #result th, #result td {
+    font-size: 15px;
+    padding: 10px;
+  }
 }
