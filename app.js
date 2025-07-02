@@ -53,16 +53,16 @@ document.getElementById("loanForm").addEventListener("submit", function (e) {
         pokok = amount / tenor;
         bunga = amount * (interest / 12);
         break;
-      case "EFEKTIF":
-        pokok = amount / tenor;
-        bunga = remaining * (interest / 12);
-        break;
-      case "ANUITAS":
+        case "EFEKTIF":
         const r = interest / 12;
         const fixed = amount * r * Math.pow(1 + r, tenor) / (Math.pow(1 + r, tenor) - 1);
         bunga = remaining * r;
         pokok = fixed - bunga;
         break;
+      case "ANUITAS":
+        pokok = amount / tenor;
+        bunga = remaining * (interest / 12);
+        break;      
     }
 
     pokok += extra;
