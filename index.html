@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>📱 Simulasi Pinjaman</title>
+  <title>Simulasi Pinjaman</title>
   <link rel="stylesheet" href="style.css" />
   <link rel="manifest" href="manifest.json" />
   <link rel="icon" href="icons/icon-192.png" sizes="192x192" />
@@ -15,9 +15,14 @@
       <label>Total Pinjaman:
         <input type="number" id="amount" placeholder="Contoh: 12000000" required />
       </label>
+	  <!--
       <label>Suku Bunga (% per tahun):
         <input type="number" id="interest" placeholder="Contoh: 10" required />
       </label>
+	  -->
+	  <label>Suku Bunga (% per tahun):
+		<input type="number" id="interest" placeholder="Contoh: 10" step="any" required />
+	  </label>
       <label>Jangka Waktu (bulan):
         <input type="number" id="tenor" placeholder="Contoh: 12" required />
       </label>
@@ -38,5 +43,13 @@
   </div>
 
   <script src="app.js"></script>
+	<!--
+	<script>
+	  const interestInput = document.getElementById('interest');
+	  interestInput.addEventListener('input', () => {
+		interestInput.value = interestInput.value.replace(',', '.');
+	  });
+	</script>
+	-->
 </body>
 </html>
